@@ -112,6 +112,28 @@ Clique com o botão direito em `index.html` → **Open with Live Server**.
 
 Após iniciar, acesse `http://localhost:8080` ou `http://localhost:8000`.
 
+### Opção 4 — Docker (recomendado para deploy)
+
+A aplicação inclui um `Dockerfile` baseado em `nginx:alpine` (~50 MB) com gzip, cache headers e MIME types otimizados para ES Modules.
+
+```bash
+# Build da imagem
+docker build -t dashboard-confitec .
+
+# Run (porta 8081 do host para não conflitar com servidores locais)
+docker run -d -p 8081:80 --name dashboard-confitec dashboard-confitec
+```
+
+Ou via Docker Compose (mais simples):
+
+```bash
+docker compose up -d
+```
+
+Acesse `http://localhost:8081`.
+
+Para parar: `docker compose down`.
+
 ---
 
 ## Como Usar

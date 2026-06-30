@@ -1,0 +1,36 @@
+# Versionamento
+.git/
+.gitignore
+.gitattributes
+
+# Dados pessoais (nunca devem ir para a imagem)
+pdfs/
+
+# Documentação e artefatos visuais (renderizados no GitHub, não na app)
+README.md
+docs/
+imgs/
+
+# Configuração de tooling local
+.vscode/
+.idea/
+.editorconfig
+
+# Artefatos do Docker (não precisam estar na imagem final).
+# A pasta `docker/` NÃO é ignorada — o nginx.conf é copiado dela durante o build.
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Logs e temporários
+*.log
+*.swp
+.DS_Store
+Thumbs.db
+
+# Dependências (caso futuramente exista)
+node_modules/
+package-lock.json
+yarn.lock
+.env
+.env.*
