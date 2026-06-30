@@ -63,3 +63,11 @@ export const CDN_URLS = {
   JSPDF: "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js",
   JSPDF_AUTOTABLE: "https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js",
 };
+
+// =====================================================================
+// Fator de disfarce: multiplica todos os valores monetários após o parse.
+// 1.0 = sem disfarce (valores reais do PDF).
+// !=1.0 = valores escalados (útil apenas para gerar screenshots de demo).
+// Mantenha em 1.0 para uso normal.
+// =====================================================================
+export const DISPLAY_MULTIPLIER = 1.0;

@@ -1,4 +1,4 @@
-import { RUBRICA_CODES_PATTERN, DESCONTO_CODES } from "../config.js";
+import { RUBRICA_CODES_PATTERN, DESCONTO_CODES, DISPLAY_MULTIPLIER } from "../config.js";
 
 const MONTH_NAMES = [
   "janeiro", "fevereiro", "março", "abril", "maio", "junho",
@@ -24,7 +24,7 @@ export function parsePayrollText(text, filename) {
 
   if (vencimentos.length === 0 && type === "mensal") return null;
 
-  return {
+  const payroll = {
     id,
     period,
     type,
@@ -37,6 +37,27 @@ export function parsePayrollText(text, filename) {
     empresa,
     totals,
   };
+
+  if (DISPLAY_MULTIPLIER !== 1) scaleMonetaryValues(payroll, DISPLAY_MULTIPLIER);
+  return payroll;
+}
+
+/**
+ * Multiplica todos os valores monetários por um fator. Usado apenas para
+ * disfarçar valores reais ao gerar screenshots de demonstração.
+ * Não toca em `ref` (horas/quantidades) nem em `faixaIrrf` (percentual).
+ */
+function scaleMonetaryValues(payroll, factor) {
+  payroll.vencimentos.forEach((v) => (v.value *= factor));
+  payroll.descontos.forEach((d) => (d.value *= factor));
+  payroll.totals.vencimentos *= factor;
+  payroll.totals.descontos *= factor;
+  payroll.totals.liquido *= factor;
+  payroll.bases.salarioBase *= factor;
+  payroll.bases.baseInss *= factor;
+  payroll.bases.baseCalcFgts *= factor;
+  payroll.bases.fgtsMes *= factor;
+  payroll.bases.baseCalcIrrf *= factor;
 }
 
 function parsePeriod(text) {

@@ -4,6 +4,10 @@ Plataforma executiva pessoal de Business Intelligence (BI) para consolidar, anal
 
 A aplicação roda 100% no navegador — sem backend, sem banco de dados, sem upload para servidores externos. Os PDFs são processados localmente via [PDF.js](https://mozilla.github.io/pdf.js/) e os dados permanecem no contexto da sessão.
 
+![Executive Dashboard — visão geral consolidando KPIs, evolução mensal e composição de descontos](imgs/print1.png)
+
+> _Valores exibidos nas imagens são fictícios — gerados a partir de um fator de disfarce para demonstração pública._
+
 ---
 
 ## Funcionalidades
