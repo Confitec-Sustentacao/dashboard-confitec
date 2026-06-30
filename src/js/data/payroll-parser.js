@@ -1,4 +1,4 @@
-import { RUBRICA_CODES_PATTERN, DESCONTO_CODES, DISPLAY_MULTIPLIER } from "../config.js";
+import { RUBRICA_CODES_PATTERN, RUBRICA_DESC_CHARS, DESCONTO_CODES, DISPLAY_MULTIPLIER } from "../config.js";
 
 const MONTH_NAMES = [
   "janeiro", "fevereiro", "março", "abril", "maio", "junho",
@@ -111,7 +111,7 @@ function parseIdentity(text) {
 
 function parseRubricas(text) {
   const rubricaRegex = new RegExp(
-    "\\b(" + RUBRICA_CODES_PATTERN + ")\\s+([A-Za-zÀ-ÿºª\\s\\-\\.\\/]+?)\\s+((?:\\d{1,3}(?:\\.\\d{3})*,\\d{2})|\\b\\d+\\b)?\\s*(\\d{1,3}(?:\\.\\d{3})*,\\d{2})",
+    "\\b(" + RUBRICA_CODES_PATTERN + ")\\s+(" + RUBRICA_DESC_CHARS + "+?)\\s+((?:\\d{1,3}(?:\\.\\d{3})*,\\d{2})|\\b\\d+\\b)?\\s*(\\d{1,3}(?:\\.\\d{3})*,\\d{2})",
     "g",
   );
 
