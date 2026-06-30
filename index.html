@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Confitec - Análise de Holerites</title>
+  
+  <!-- Fontes Premium -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Estilos Customizados -->
+  <link rel="stylesheet" href="src/css/styles.css?v=1.3.0">
+  
+  <!-- Chart.js para Visualização de Dados -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- PDF.js para Leitura de Holerites no Cliente -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+  </script>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- Sidebar / Menu de Navegação -->
+    <aside class="sidebar">
+      <div class="profile-section">
+        <div class="profile-card">
+          <div class="avatar">RC</div>
+          <h3 class="profile-name">Recurso Confitec</h3>
+          <p class="profile-role">Usuário</p>
+          <p class="profile-company">JMCONFITEC SISTEMAS</p>
+        </div>
+      </div>
+      
+      <div class="sidebar-menu-wrapper">
+        <!-- Botão Carregar PDFs (Com Efeito Neon Rotativo) -->
+        <div id="upload-btn-container">
+          <div class="neon-btn-wrapper">
+            <div class="neon-btn-glow"></div>
+            <button class="neon-btn-inner" id="btn-open-upload-modal">
+              <i data-lucide="upload-cloud" style="width: 18px; height: 18px;"></i>
+              <span>Carregar PDFs</span>
+            </button>
+          </div>
+        </div>
+
+        <nav>
+          <ul class="nav-menu">
+            <li>
+              <a class="nav-item active" data-tab="overview">
+                <i data-lucide="layout-dashboard"></i>
+                Visão Geral
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" data-tab="holerite-mirror">
+                <i data-lucide="file-text"></i>
+                Espelho do Holerite
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" data-tab="bonuses">
+                <i data-lucide="gift"></i>
+                13º & PLR
+              </a>
+            </li>
+            <li>
+              <a class="nav-item" data-tab="simulator">
+                <i data-lucide="calculator"></i>
+                Simulador Salarial
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+      
+      <div class="sidebar-footer">
+        <p>Confitec Dashboard v1.0.0</p>
+        <p>© 2026</p>
+      </div>
+    </aside>
+    
+    <!-- Painel de Conteúdo Principal -->
+    <main class="content-wrapper">
+      
+      <!-- Top Header & Controles Globais -->
+      <header class="dashboard-header">
+        <div class="header-title">
+          <h1 id="page-title">Executive Dashboard</h1>
+          <p id="page-subtitle">Acompanhamento e evolução financeira de holerites (Janeiro - Junho 2026)</p>
+        </div>
+        
+        <div class="header-controls">
+          <!-- Alternador de Tema Claro/Escuro -->
+          <div class="theme-switch-container">
+            <i data-lucide="sun" style="width: 16px; height: 16px; color: var(--text-secondary);"></i>
+            <label class="theme-switch">
+              <input type="checkbox" id="theme-toggle">
+              <span class="slider"></span>
+            </label>
+            <i data-lucide="moon" style="width: 16px; height: 16px; color: var(--text-secondary);"></i>
+          </div>
+          
+          <!-- Filtro de Período Global Multi-seleção -->
+          <div class="custom-multiselect" id="period-multiselect">
+            <button class="multiselect-trigger select-input" id="multiselect-btn">
+              <span id="multiselect-label">Todo o Período (Consolidado)</span>
+              <i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i>
+            </button>
+            <div class="multiselect-dropdown" id="multiselect-list">
+              <div class="multiselect-option select-all-option">
+                <input type="checkbox" id="chk-select-all" checked>
+                <label for="chk-select-all" style="font-weight: bold; margin-bottom: 0;">Selecionar Todos</label>
+              </div>
+              <div class="multiselect-divider"></div>
+              <div id="multiselect-options-container">
+                <!-- Opções injetadas dinamicamente via JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      
+      <!-- Métricas KPIs Principais -->
+      <section class="kpi-grid">
+        <div class="kpi-card kpi-bruto">
+          <div class="kpi-title">
+            <span>Rendimento Bruto</span>
+            <i data-lucide="trending-up" class="kpi-icon"></i>
+          </div>
+          <div class="kpi-value" id="kpi-bruto-val">R$ 0,00</div>
+          <div class="kpi-trend neutral" id="kpi-bruto-sub">Total de proventos</div>
+        </div>
+        
+        <div class="kpi-card kpi-liquido">
+          <div class="kpi-title">
+            <span>Rendimento Líquido</span>
+            <i data-lucide="wallet" class="kpi-icon"></i>
+          </div>
+          <div class="kpi-value" id="kpi-liquido-val">R$ 0,00</div>
+          <div class="kpi-trend positive" id="kpi-liquido-sub">Líquido a receber</div>
+        </div>
+        
+        <div class="kpi-card kpi-descontos">
+          <div class="kpi-title">
+            <span>Total Retido</span>
+            <i data-lucide="arrow-down-right" class="kpi-icon"></i>
+          </div>
+          <div class="kpi-value" id="kpi-descontos-val">R$ 0,00</div>
+          <div class="kpi-trend negative" id="kpi-descontos-sub">Descontos no período</div>
+        </div>
+        
+        <div class="kpi-card kpi-fgts">
+          <div class="kpi-title">
+            <span>FGTS do Período</span>
+            <i data-lucide="safe" class="kpi-icon"></i>
+          </div>
+          <div class="kpi-value" id="kpi-fgts-val">R$ 0,00</div>
+          <div class="kpi-trend positive" id="kpi-fgts-sub">Fundo de Garantia</div>
+        </div>
+        
+        <div class="kpi-card kpi-taxa">
+          <div class="kpi-title">
+            <span>Alíquota Efetiva</span>
+            <i data-lucide="percent" class="kpi-icon"></i>
+          </div>
+          <div class="kpi-value" id="kpi-taxa-val">0,0%</div>
+          <div class="kpi-trend negative" id="kpi-taxa-sub">IRRF + INSS sobre Bruto</div>
+        </div>
+      </section>
+      
+      <!-- ABAS DE CONTEÚDO -->
+      
+      <!-- ABA 1: VISÃO GERAL -->
+      <div id="tab-overview" class="tab-content active">
+        <!-- Gráficos Principais -->
+        <div class="chart-grid">
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <h2 class="chart-card-title">Evolução Mensal (Rendimentos vs Descontos)</h2>
+            </div>
+            <div class="chart-container">
+              <canvas id="chart-evolution"></canvas>
+            </div>
+          </div>
+          
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <h2 class="chart-card-title">Composição Média dos Descontos</h2>
+            </div>
+            <div class="chart-container">
+              <canvas id="chart-deductions"></canvas>
+            </div>
+          </div>
+          
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <h2 class="chart-card-title">Origem da Renda (Salário Base vs Horas Extras/Adicionais)</h2>
+            </div>
+            <div class="chart-container">
+              <canvas id="chart-income-sources"></canvas>
+            </div>
+          </div>
+          
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <h2 class="chart-card-title">Depósitos de FGTS por Período</h2>
+            </div>
+            <div class="chart-container">
+              <canvas id="chart-fgts"></canvas>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Tabela Resumo -->
+        <div class="table-card">
+          <h2 class="chart-card-title" style="margin-bottom: 1rem;">Detalhamento Geral de Períodos (2026)</h2>
+          <table class="custom-table" id="summary-table">
+            <thead>
+              <tr>
+                <th>Referência</th>
+                <th>Tipo</th>
+                <th>Vencimentos Brutos</th>
+                <th>Total Descontos</th>
+                <th>Rendimento Líquido</th>
+                <th>FGTS do Mês</th>
+                <th>Taxa Efetiva Retenção</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Preenchido via Javascript -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Tabela Detalhamento de Itens -->
+        <div class="table-card" style="margin-top: 2rem;">
+          <h2 class="chart-card-title" style="margin-bottom: 0.5rem;">Detalhamento de Itens e Lançamentos por Arquivo</h2>
+          <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
+            Visualize e filtre cada rubrica lançada nos holerites por descrição ou período.
+          </p>
+          
+          <!-- Barra de Filtros da Planilha -->
+          <div class="filter-bar">
+            <!-- Filtro Descrição (Multi-seleção) -->
+            <div class="filter-group">
+              <label>Descrição Rubrica</label>
+              <div class="custom-multiselect" id="item-desc-multiselect" style="width: 100%;">
+                <button class="multiselect-trigger select-input" id="item-desc-btn" style="width: 100%;">
+                  <span id="item-desc-label">Todas as Rubricas</span>
+                  <i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i>
+                </button>
+                <div class="multiselect-dropdown" id="item-desc-list" style="left: 0; right: auto; width: 100%;">
+                  <div class="multiselect-option select-all-option">
+                    <input type="checkbox" id="chk-desc-all" checked>
+                    <label for="chk-desc-all" style="font-weight: bold; margin-bottom: 0;">Selecionar Todas</label>
+                  </div>
+                  <div class="multiselect-divider"></div>
+                  <div id="item-desc-options-container">
+                    <!-- Opções injetadas dinamicamente via JS -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Filtro Tipo (Multi-seleção) -->
+            <div class="filter-group">
+              <label>Tipo</label>
+              <div class="custom-multiselect" id="item-type-multiselect" style="width: 100%;">
+                <button class="multiselect-trigger select-input" id="item-type-btn" style="width: 100%;">
+                  <span id="item-type-label">Todos os Tipos</span>
+                  <i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i>
+                </button>
+                <div class="multiselect-dropdown" id="item-type-list" style="left: 0; right: auto; width: 100%;">
+                  <div class="multiselect-option select-all-option">
+                    <input type="checkbox" id="chk-type-all" checked>
+                    <label for="chk-type-all" style="font-weight: bold; margin-bottom: 0;">Selecionar Todos</label>
+                  </div>
+                  <div class="multiselect-divider"></div>
+                  <div id="item-type-options-container">
+                    <!-- Opções injetadas dinamicamente via JS -->
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Filtro Período / Arquivo (Multi-seleção) -->
+            <div class="filter-group">
+              <label>Período / Arquivo</label>
+              <div class="custom-multiselect" id="item-period-multiselect" style="width: 100%;">
+                <button class="multiselect-trigger select-input" id="item-period-btn" style="width: 100%;">
+                  <span id="item-period-label">Todos os Períodos / Arquivos</span>
+                  <i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i>
+                </button>
+                <div class="multiselect-dropdown" id="item-period-list" style="left: 0; right: auto; width: 100%;">
+                  <div class="multiselect-option select-all-option">
+                    <input type="checkbox" id="chk-period-all" checked>
+                    <label for="chk-period-all" style="font-weight: bold; margin-bottom: 0;">Selecionar Todos</label>
+                  </div>
+                  <div class="multiselect-divider"></div>
+                  <div id="item-period-options-container">
+                    <!-- Opções injetadas dinamicamente via JS -->
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Exportação de Planilha -->
+            <div class="filter-group" style="flex: 0 0 auto; min-width: auto; justify-content: flex-end;">
+              <label>Exportar Planilha</label>
+              <div style="display: flex; gap: 0.5rem;">
+                <button class="btn-primary" id="btn-export-csv" style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; padding: 0.65rem 1rem; border-radius: 8px; background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);">
+                  <i data-lucide="file-spreadsheet" style="width: 16px; height: 16px;"></i>
+                  CSV
+                </button>
+                <button class="btn-primary" id="btn-export-pdf" style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.85rem; padding: 0.65rem 1rem; border-radius: 8px; background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.2);">
+                  <i data-lucide="file-text" style="width: 16px; height: 16px;"></i>
+                  PDF
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <table class="custom-table" id="items-detail-table">
+            <thead>
+              <tr>
+                <th>Período / Arquivo</th>
+                <th>Tipo</th>
+                <th>Descrição</th>
+                <th style="text-align: right;">Referência</th>
+                <th style="text-align: right;">Valor (R$)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Preenchido via Javascript -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <!-- ABA 2: ESPELHO DE HOLERITE -->
+      <div id="tab-holerite-mirror" class="tab-content">
+        <div class="holerite-container">
+          <div class="holerite-controls">
+            <span>Visualizar Holerite Oficial:</span>
+            <select id="holerite-period-select" class="select-input">
+              <!-- Preenchido dinamicamente -->
+            </select>
+          </div>
+          
+          <div class="holerite-paper" id="holerite-paper-view">
+            <!-- Modelo de Holerite oficial preenchido via Javascript -->
+          </div>
+        </div>
+      </div>
+      
+      <!-- ABA 3: BONIFICAÇÕES (13º & PLR) -->
+      <div id="tab-bonuses" class="tab-content">
+        <div class="chart-grid">
+          <!-- Informações de PLR -->
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <h2 class="chart-card-title">PLR (Participação nos Lucros e Resultados) - Abril/2026</h2>
+            </div>
+            <div class="sim-metrics-list" style="margin: 0 0 1.5rem 0;">
+              <div class="sim-metric-row">
+                <span class="sim-metric-label">Valor de PLR Bruto:</span>
+                <span class="sim-metric-val green" id="plr-bruto" style="font-size: 1.2rem;">R$ 0,00</span>
+              </div>
+              <div class="sim-metric-row">
+                <span class="sim-metric-label">Imposto de Renda sobre PLR (15%):</span>
+                <span class="sim-metric-val red" id="plr-irrf">R$ 0,00</span>
+              </div>
+              <div class="sim-metric-row">
+                <span class="sim-metric-label">Contribuição Sindical:</span>
+                <span class="sim-metric-val red" id="plr-sindical">R$ 0,00</span>
+              </div>
+              <div class="sim-metric-row" style="border-top: 2px solid var(--border-card); padding-top: 0.75rem;">
+                <span class="sim-metric-label" style="font-weight: bold;">Líquido Recebido:</span>
+                <span class="sim-metric-val green" id="plr-liquido" style="font-size: 1.3rem;">R$ 0,00</span>
+              </div>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+              A PLR foi paga no período de Abril de 2026. A alíquota do Imposto de Renda segue tabela própria para PLR (15% sobre o valor após deduções), com incidência de contribuição de assistência sindical local (PLR RJ).
+            </p>
+          </div>
+          
+          <!-- Informações de 13º Salário -->
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <h2 class="chart-card-title">Adiantamento de 13º Salário - Junho/2026</h2>
+            </div>
+            <div class="sim-metrics-list" style="margin: 0 0 1.5rem 0;">
+              <div class="sim-metric-row">
+                <span class="sim-metric-label">Adiantamento 13º Bruto (50%):</span>
+                <span class="sim-metric-val green" id="13o-bruto" style="font-size: 1.2rem;">R$ 0,00</span>
+              </div>
+              <div class="sim-metric-row">
+                <span class="sim-metric-label">Horas Extras e Adicionais Médios incorporados:</span>
+                <span class="sim-metric-val green" id="13o-extras">R$ 0,00</span>
+              </div>
+              <div class="sim-metric-row">
+                <span class="sim-metric-label">Descontos (INSS/IRRF no Adiantamento):</span>
+                <span class="sim-metric-val" id="13o-descontos">R$ 0,00</span>
+              </div>
+              <div class="sim-metric-row" style="border-top: 2px solid var(--border-card); padding-top: 0.75rem;">
+                <span class="sim-metric-label" style="font-weight: bold;">Líquido Recebido:</span>
+                <span class="sim-metric-val green" id="13o-liquido" style="font-size: 1.3rem;">R$ 0,00</span>
+              </div>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+              O adiantamento da primeira parcela do 13º salário ocorreu em Junho de 2026. Conforme legislação trabalhista brasileira, não há incidência de INSS e IRRF na primeira parcela, sendo estes tributos descontados integralmente na segunda parcela (dezembro).
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- ABA 4: SIMULADOR FINANCEIRO -->
+      <div id="tab-simulator" class="tab-content">
+        <div class="simulator-layout">
+          
+          <!-- Controles de Simulação -->
+          <div class="simulator-controls">
+            <h2 class="chart-card-title" style="margin-bottom: 0.5rem;">Ajuste os Parâmetros</h2>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+              Simule o impacto de horas extras, horas de sobreaviso adicionais ou alterações salariais no seu salário líquido.
+            </p>
+            
+            <!-- Salário Base -->
+            <div class="sim-input-group">
+              <div style="display: flex; justify-content: space-between;">
+                <label>Salário Base:</label>
+                <span class="sim-input-value" id="sim-base-val">R$ 0,00</span>
+              </div>
+              <input type="range" id="sim-base-range" min="0" max="25000" step="100" value="0">
+              <div class="sim-range-labels">
+                <span>R$ 0</span>
+                <span>R$ 25.000</span>
+              </div>
+            </div>
+            
+            <!-- Horas Extras Normais -->
+            <div class="sim-input-group">
+              <div style="display: flex; justify-content: space-between;">
+                <label>Horas Extras Normais (100%):</label>
+                <span class="sim-input-value" id="sim-he-val">0 horas</span>
+              </div>
+              <input type="range" id="sim-he-range" min="0" max="40" step="1" value="0">
+              <div class="sim-range-labels">
+                <span>0h</span>
+                <span>40h</span>
+              </div>
+            </div>
+            
+            <!-- Horas Extras Domingos/Feriados -->
+            <div class="sim-input-group">
+              <div style="display: flex; justify-content: space-between;">
+                <label>Horas Extras Domingos (100% / Adic.):</label>
+                <span class="sim-input-value" id="sim-hed-val">0 horas</span>
+              </div>
+              <input type="range" id="sim-hed-range" min="0" max="40" step="1" value="0">
+              <div class="sim-range-labels">
+                <span>0h</span>
+                <span>40h</span>
+              </div>
+            </div>
+            
+            <!-- Horas Sobre Aviso -->
+            <div class="sim-input-group">
+              <div style="display: flex; justify-content: space-between;">
+                <label>Jornada Sobre Aviso:</label>
+                <span class="sim-input-value" id="sim-sa-val">0 horas</span>
+              </div>
+              <input type="range" id="sim-sa-range" min="0" max="150" step="5" value="0">
+              <div class="sim-range-labels">
+                <span>0h</span>
+                <span>150h</span>
+              </div>
+            </div>
+            
+            <!-- Ajuda de Custo -->
+            <div class="sim-input-group">
+              <div style="display: flex; justify-content: space-between;">
+                <label>Ajuda de Custo (Isenta):</label>
+                <span class="sim-input-value" id="sim-ac-val">R$ 0,00</span>
+              </div>
+              <input type="range" id="sim-ac-range" min="0" max="1000" step="50" value="0">
+              <div class="sim-range-labels">
+                <span>R$ 0</span>
+                <span>R$ 1.000</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Resultados da Simulação -->
+          <div class="simulator-results">
+            <div>
+              <h2 class="chart-card-title">Resultado Estimado</h2>
+              <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                Cálculos aproximados com base nas tabelas fiscais vigentes (INSS teto de desconto e IRRF simplificado ou por faixa de 27.5%).
+              </p>
+              
+              <div class="sim-metrics-list">
+                <div class="sim-metric-row">
+                  <span class="sim-metric-label">Vencimentos Totais (Bruto):</span>
+                  <span class="sim-metric-val" id="sim-res-bruto">R$ 0,00</span>
+                </div>
+                <div class="sim-metric-row">
+                  <span class="sim-metric-label">Desconto INSS Estimado:</span>
+                  <span class="sim-metric-val red" id="sim-res-inss">R$ 0,00</span>
+                </div>
+                <div class="sim-metric-row">
+                  <span class="sim-metric-label">Desconto IRRF Estimado:</span>
+                  <span class="sim-metric-val red" id="sim-res-irrf">R$ 0,00</span>
+                </div>
+                <div class="sim-metric-row">
+                  <span class="sim-metric-label">Depósito de FGTS Estimado:</span>
+                  <span class="sim-metric-val" id="sim-res-fgts">R$ 0,00</span>
+                </div>
+                <div class="sim-metric-row" style="border-top: 2px solid var(--border-card); padding-top: 1rem;">
+                  <span class="sim-metric-label" style="font-weight: bold; font-size: 1.1rem;">LÍQUIDO ESTIMADO:</span>
+                  <span class="sim-metric-val green" style="font-size: 1.4rem;" id="sim-res-liquido">R$ 0,00</span>
+                </div>
+              </div>
+            </div>
+            
+            <div style="border-top: 1px solid var(--border-card); padding-top: 1rem; font-size: 0.75rem; color: var(--text-muted); line-height: 1.4;">
+              *Nota: Este simulador realiza cálculos de impostos considerando a tabela de INSS com teto máximo estabelecido em R$ 988,07 (para salários superiores ao teto de contribuição, correspondente a cerca de 14% das faixas progressivas) e alíquota de IRRF de 27,5% com dedução padrão da faixa. O DSR sobre horas extras e jornada de sobreaviso é projetado proporcionalmente a 1/6 (fórmula simplificada).
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      
+    </main>
+  </div>
+
+  <!-- Modal Overlay para Upload de PDFs -->
+  <div class="modal-overlay" id="upload-modal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 class="modal-title">Carregar Recibos de Holerite (PDF)</h3>
+        <button class="modal-close" id="btn-close-upload-modal">&times;</button>
+      </div>
+      
+      <p style="font-size: 0.85rem; color: var(--text-secondary);">
+        Arraste e solte os arquivos PDF de contra-cheque oficiais da Confitec para processá-los e adicioná-los automaticamente ao painel.
+      </p>
+      
+      <!-- Área de Drag & Drop -->
+      <div class="drag-drop-area" id="drag-drop-zone">
+        <i data-lucide="upload-cloud" style="width: 48px; height: 48px; color: var(--color-primary); pointer-events: none;"></i>
+        <p class="drag-drop-text" style="pointer-events: none;">Arraste e solte seus PDFs aqui ou clique para selecionar</p>
+        <p class="drag-drop-subtext" style="pointer-events: none;">Formatos aceitos: PDF</p>
+        <input type="file" id="file-input" multiple accept=".pdf" style="display: none;">
+      </div>
+      
+      <!-- Tabela com os arquivos carregados -->
+      <div style="overflow-x: auto; max-height: 250px;">
+        <table class="custom-table" id="modal-files-table" style="display: none; width: 100%;">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Período</th>
+              <th>Funcionário</th>
+              <th>Status</th>
+              <th style="text-align: center; width: 80px;">Ação</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Preenchido dinamicamente via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts do App (ES Modules) -->
+  <script type="module" src="src/js/main.js?v=1.3.0"></script>
+</body>
+</html>
