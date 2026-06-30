@@ -1,4 +1,4 @@
-import { RUBRICA_CODES_PATTERN, RUBRICA_DESC_CHARS, DESCONTO_CODES, DISPLAY_MULTIPLIER } from "../config.js";
+import { RUBRICA_CODES_PATTERN, DESCONTO_CODES, DISPLAY_MULTIPLIER } from "../config.js";
 
 const MONTH_NAMES = [
   "janeiro", "fevereiro", "março", "abril", "maio", "junho",
@@ -110,6 +110,7 @@ function parseIdentity(text) {
 }
 
 function parseRubricas(text) {
+
   // Descrição = qualquer caractere não-quebra-de-linha (não-greedy). Mais robusto
   // do que enumerar character classes — PDFs com glyphs incomuns (ex.: "13º" via
   // PDF.js) podem extrair chars Unicode fora de Latin-1 que um allowlist erra.

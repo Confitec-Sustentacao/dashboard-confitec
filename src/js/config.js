@@ -21,10 +21,6 @@ export const DESCONTO_CODES = ["0006", "9R74", "07S5FO", "02A1", "0088", "0089",
 // Padrão de regex compilado para extrair rubricas dos PDFs
 export const RUBRICA_CODES_PATTERN = "(?:0115|9R69|01H8|01H2|0082|0006|9R74|07S5FO|02A1|0088|0089|PLR|DPLR|0091|0036|01H1|01H9)";
 
-// Caracteres permitidos na descrição de uma rubrica.
-// Inclui dígitos para descrições como "Adiantamento de 13º", "Hora Extra 100%", etc.
-export const RUBRICA_DESC_CHARS = "[A-Za-zÀ-ÿºª0-9\\s\\-\\.\\/]";
-
 // Tabela progressiva de INSS 2026 (valores aproximados)
 export const INSS_TABLE = {
   TETO_DESCONTO: 988.07,
