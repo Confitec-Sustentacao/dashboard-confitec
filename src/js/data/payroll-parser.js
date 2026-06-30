@@ -110,8 +110,12 @@ function parseIdentity(text) {
 }
 
 function parseRubricas(text) {
+  // Descrição = qualquer caractere não-quebra-de-linha (não-greedy). Mais robusto
+  // do que enumerar character classes — PDFs com glyphs incomuns (ex.: "13º" via
+  // PDF.js) podem extrair chars Unicode fora de Latin-1 que um allowlist erra.
+  // O lookahead pelo padrão de valor garante que a descrição pare no lugar certo.
   const rubricaRegex = new RegExp(
-    "\\b(" + RUBRICA_CODES_PATTERN + ")\\s+(" + RUBRICA_DESC_CHARS + "+?)\\s+((?:\\d{1,3}(?:\\.\\d{3})*,\\d{2})|\\b\\d+\\b)?\\s*(\\d{1,3}(?:\\.\\d{3})*,\\d{2})",
+    "\\b(" + RUBRICA_CODES_PATTERN + ")\\s+(.+?)\\s+((?:\\d{1,3}(?:\\.\\d{3})*,\\d{2})|\\b\\d+\\b)?\\s*(\\d{1,3}(?:\\.\\d{3})*,\\d{2})",
     "g",
   );
 
