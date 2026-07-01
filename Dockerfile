@@ -20,8 +20,10 @@ COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 COPY index.html /usr/share/nginx/html/
 COPY src/ /usr/share/nginx/html/src/
 
-# Healthcheck: garante que o nginx está respondendo
+# Healthcheck: garante que o nginx está respondendo.
+# Usa 127.0.0.1 (IPv4 explícito) — "localhost" pode resolver para ::1 (IPv6)
+# e falhar caso o nginx não escute em IPv6.
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD wget --no-verbose --tries=1 --spider http://localhost/ || exit 1
+  CMD wget --no-verbose --tries=1 --spider http://127.0.0.1/ || exit 1
 
 EXPOSE 80
