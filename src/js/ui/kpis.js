@@ -18,8 +18,10 @@ export function renderKPIs(periodIds) {
   const m = getMetricsForPeriods(periodIds);
 
   $("kpi-bruto-val").innerText = formatCurrency(m.totalBruto);
-  $("kpi-liquido-val").innerText = formatCurrency(m.totalLiquido);
-  $("kpi-descontos-val").innerText = formatCurrency(m.totalDescontos);
+  // Líquido "de fato recebido" = bruto − outros descontos (adiantamento compõe o líquido)
+  $("kpi-liquido-val").innerText = formatCurrency(m.liquidoReal);
+  // Total retido = só descontos reais (exclui adiantamento, que é salário antecipado)
+  $("kpi-descontos-val").innerText = formatCurrency(m.totalOutrosDescontos);
   $("kpi-fgts-val").innerText = formatCurrency(m.totalFgts);
   $("kpi-taxa-val").innerText = formatPercent(m.taxaEfetiva);
 
@@ -29,8 +31,8 @@ export function renderKPIs(periodIds) {
     : `${periodIds.length} período(s) selecionado(s)`;
 
   $("kpi-bruto-sub").innerText = `Proventos brutos (${descLabel})`;
-  $("kpi-liquido-sub").innerText = "Rendimento líquido em conta";
-  $("kpi-descontos-sub").innerText = "Descontos deduzidos acumulados";
+  $("kpi-liquido-sub").innerText = "Recebido (inclui adiantamento)";
+  $("kpi-descontos-sub").innerText = "Descontos reais (exclui adiantamento)";
   $("kpi-fgts-sub").innerText = "Depósitos de FGTS do período";
   $("kpi-taxa-sub").innerText = "Impostos efetivos (INSS + IRRF)";
 }

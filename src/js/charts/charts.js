@@ -4,6 +4,7 @@ import {
   getMonthlySalaries,
   getAdiantamentoTotal,
   getOutrosDescontosTotal,
+  getLiquidoReal,
 } from "../data/payroll-store.js";
 import { getThemeColors } from "../ui/theme.js";
 import { CHART_COLORS, RUBRICAS } from "../config.js";
@@ -71,7 +72,7 @@ export function renderCharts(periodIds) {
   );
   appState.charts.evolution.data.labels = monthly.map((d) => d.period.split("/")[0]);
   appState.charts.evolution.data.datasets[0].data = monthly.map((d) => d.totals.vencimentos);
-  appState.charts.evolution.data.datasets[1].data = monthly.map((d) => d.totals.liquido);
+  appState.charts.evolution.data.datasets[1].data = monthly.map(getLiquidoReal);
   appState.charts.evolution.data.datasets[2].data = monthly.map(getAdiantamentoTotal);
   appState.charts.evolution.data.datasets[3].data = monthly.map(getOutrosDescontosTotal);
   appState.charts.evolution.update();
@@ -150,7 +151,7 @@ function buildEvolutionChart(colors, monthlyData) {
         },
         {
           label: "Salário Líquido",
-          data: monthlyData.map((d) => d.totals.liquido),
+          data: monthlyData.map(getLiquidoReal),
           borderColor: CHART_COLORS.liquido,
           backgroundColor: "rgba(16, 185, 129, 0.1)",
           borderWidth: 3,

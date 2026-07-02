@@ -14,14 +14,25 @@ export function findById(id) {
 }
 
 /**
+ * Líquido "recebido de fato" no período: Vencimentos − Outros descontos.
+ * O Adiantamento Salarial NÃO é subtraído porque é dinheiro que a pessoa já
+ * recebeu antecipadamente — ele compõe o líquido, não o reduz.
+ * Equivale a: líquido oficial do recibo + adiantamento.
+ */
+export function getLiquidoReal(payroll) {
+  return payroll.totals.liquido + getAdiantamentoTotal(payroll);
+}
+
+/**
  * Aggrega métricas para um conjunto de períodos selecionados.
  * Usado pelos cartões de KPI e pelo gráfico de evolução.
  */
 export function getMetricsForPeriods(periodIds) {
   const metrics = {
     totalBruto: 0,
-    totalLiquido: 0,
-    totalDescontos: 0,
+    totalLiquido: 0,        // líquido oficial (vencimentos − todos descontos)
+    totalDescontos: 0,      // todos os descontos (inclui adiantamento)
+    totalAdiantamento: 0,
     totalFgts: 0,
     totalInss: 0,
     totalIrrf: 0,
@@ -34,6 +45,7 @@ export function getMetricsForPeriods(periodIds) {
     metrics.totalBruto += data.totals.vencimentos;
     metrics.totalDescontos += data.totals.descontos;
     metrics.totalLiquido += data.totals.liquido;
+    metrics.totalAdiantamento += getAdiantamentoTotal(data);
     metrics.totalFgts += data.bases.fgtsMes;
 
     data.descontos.forEach((d) => {
@@ -41,6 +53,10 @@ export function getMetricsForPeriods(periodIds) {
       if (d.code === RUBRICAS.IRRF || d.code === RUBRICAS.IRRF_PLR) metrics.totalIrrf += d.value;
     });
   });
+
+  // Adiantamento não é retenção real → reclassificado para compor o líquido.
+  metrics.totalOutrosDescontos = metrics.totalDescontos - metrics.totalAdiantamento;
+  metrics.liquidoReal = metrics.totalLiquido + metrics.totalAdiantamento;
 
   metrics.taxaEfetiva = metrics.totalBruto > 0
     ? ((metrics.totalInss + metrics.totalIrrf) / metrics.totalBruto) * 100
