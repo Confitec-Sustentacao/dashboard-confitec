@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
   <!-- Estilos Customizados -->
-  <link rel="stylesheet" href="src/css/styles.css?v=1.5.0">
+  <link rel="stylesheet" href="src/css/styles.css?v=1.5.1">
   
   <!-- Chart.js para Visualização de Dados -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -255,27 +255,27 @@
           
           <!-- Barra de Filtros da Planilha -->
           <div class="filter-bar">
-            <!-- Filtro Descrição (Multi-seleção) -->
+            <!-- Filtro Período / Arquivo (Multi-seleção) -->
             <div class="filter-group">
-              <label>Descrição Rubrica</label>
-              <div class="custom-multiselect" id="item-desc-multiselect" style="width: 100%;">
-                <button class="multiselect-trigger select-input" id="item-desc-btn" style="width: 100%;">
-                  <span id="item-desc-label">Todas as Rubricas</span>
+              <label>Período / Arquivo</label>
+              <div class="custom-multiselect" id="item-period-multiselect" style="width: 100%;">
+                <button class="multiselect-trigger select-input" id="item-period-btn" style="width: 100%;">
+                  <span id="item-period-label">Todos os Períodos / Arquivos</span>
                   <i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i>
                 </button>
-                <div class="multiselect-dropdown" id="item-desc-list" style="left: 0; right: auto; width: 100%;">
+                <div class="multiselect-dropdown" id="item-period-list" style="left: 0; right: auto; width: 100%;">
                   <div class="multiselect-option select-all-option">
-                    <input type="checkbox" id="chk-desc-all" checked>
-                    <label for="chk-desc-all" style="font-weight: bold; margin-bottom: 0;">Selecionar Todas</label>
+                    <input type="checkbox" id="chk-period-all" checked>
+                    <label for="chk-period-all" style="font-weight: bold; margin-bottom: 0;">Selecionar Todos</label>
                   </div>
                   <div class="multiselect-divider"></div>
-                  <div id="item-desc-options-container">
+                  <div id="item-period-options-container">
                     <!-- Opções injetadas dinamicamente via JS -->
                   </div>
                 </div>
               </div>
             </div>
-            
+
             <!-- Filtro Tipo (Multi-seleção) -->
             <div class="filter-group">
               <label>Tipo</label>
@@ -297,27 +297,27 @@
               </div>
             </div>
 
-            <!-- Filtro Período / Arquivo (Multi-seleção) -->
+            <!-- Filtro Descrição (Multi-seleção) -->
             <div class="filter-group">
-              <label>Período / Arquivo</label>
-              <div class="custom-multiselect" id="item-period-multiselect" style="width: 100%;">
-                <button class="multiselect-trigger select-input" id="item-period-btn" style="width: 100%;">
-                  <span id="item-period-label">Todos os Períodos / Arquivos</span>
+              <label>Descrição Rubrica</label>
+              <div class="custom-multiselect" id="item-desc-multiselect" style="width: 100%;">
+                <button class="multiselect-trigger select-input" id="item-desc-btn" style="width: 100%;">
+                  <span id="item-desc-label">Todas as Rubricas</span>
                   <i data-lucide="chevron-down" style="width: 16px; height: 16px;"></i>
                 </button>
-                <div class="multiselect-dropdown" id="item-period-list" style="left: 0; right: auto; width: 100%;">
+                <div class="multiselect-dropdown" id="item-desc-list" style="left: 0; right: auto; width: 100%;">
                   <div class="multiselect-option select-all-option">
-                    <input type="checkbox" id="chk-period-all" checked>
-                    <label for="chk-period-all" style="font-weight: bold; margin-bottom: 0;">Selecionar Todos</label>
+                    <input type="checkbox" id="chk-desc-all" checked>
+                    <label for="chk-desc-all" style="font-weight: bold; margin-bottom: 0;">Selecionar Todas</label>
                   </div>
                   <div class="multiselect-divider"></div>
-                  <div id="item-period-options-container">
+                  <div id="item-desc-options-container">
                     <!-- Opções injetadas dinamicamente via JS -->
                   </div>
                 </div>
               </div>
             </div>
-            
+
             <!-- Exportação de Planilha -->
             <div class="filter-group" style="flex: 0 0 auto; min-width: auto; justify-content: flex-end;">
               <label>Exportar Planilha</label>
@@ -589,6 +589,6 @@
   </div>
 
   <!-- Scripts do App (ES Modules) -->
-  <script type="module" src="src/js/main.js?v=1.5.0"></script>
+  <script type="module" src="src/js/main.js?v=1.5.1"></script>
 </body>
 </html>
