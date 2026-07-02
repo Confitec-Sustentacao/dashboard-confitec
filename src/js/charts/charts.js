@@ -205,10 +205,9 @@ function buildDeductionsChart(colors) {
 }
 
 /**
- * Agrega descontos por descrição. O "Desconto de Adiantamento Salarial"
- * vai sempre na primeira posição com cor de destaque (âmbar) — é a rubrica
- * que mais representa o salário, então merece evidência visual separada
- * das contribuições e tributos.
+ * Agrega descontos por descrição para o donut de Composição.
+ * O Adiantamento Salarial (rubrica 0006) é EXCLUÍDO: ele não é retenção real,
+ * é parcela do salário paga antecipada e compõe o líquido (regra do KPI/gráfico).
  */
 function buildDeductionsBreakdown(periodIds) {
   const discountSum = {};
@@ -216,25 +215,15 @@ function buildDeductionsBreakdown(periodIds) {
     const p = findById(id);
     if (!p) return;
     p.descontos.forEach((d) => {
+      if (d.code === RUBRICAS.ADIANTAMENTO_SALARIAL) return; // não é desconto efetivo
       discountSum[d.description] = (discountSum[d.description] || 0) + d.value;
     });
   });
 
   const entries = Object.entries(discountSum);
-  const adiantamentoIdx = entries.findIndex(([desc]) => /adiantamento/i.test(desc));
-  if (adiantamentoIdx > 0) {
-    const [adiantamentoEntry] = entries.splice(adiantamentoIdx, 1);
-    entries.unshift(adiantamentoEntry);
-  }
-
   const labels = entries.map(([desc]) => desc);
   const values = entries.map(([, val]) => val);
-  const backgroundColor = labels.map((label, i) => {
-    if (i === 0 && /adiantamento/i.test(label)) return CHART_COLORS.ajuda;
-    // Pula a cor âmbar (já reservada para o adiantamento) ao distribuir o palette restante
-    const palette = CHART_COLORS.donut.filter((c) => c !== CHART_COLORS.ajuda);
-    return palette[(i - 1) % palette.length];
-  });
+  const backgroundColor = labels.map((_, i) => CHART_COLORS.donut[i % CHART_COLORS.donut.length]);
 
   return { labels, values, backgroundColor };
 }
