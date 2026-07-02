@@ -429,6 +429,27 @@ input:checked + .slider:before {
 .kpi-trend.negative { color: var(--color-danger); }
 .kpi-trend.neutral { color: var(--text-muted); }
 
+/* Variação mês a mês (delta) — cor encode bom/ruim, seta encode direção */
+.kpi-delta {
+  font-size: 0.8rem;
+  font-weight: 700;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-height: 1.1rem; /* reserva espaço mesmo quando vazio, evita "pulo" no layout */
+}
+
+.kpi-delta .delta-label {
+  font-weight: 500;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.kpi-delta.positive { color: var(--color-success); }
+.kpi-delta.negative { color: var(--color-danger); }
+.kpi-delta.neutral { color: var(--text-muted); }
+
 /* Seções de Gráficos e Abas */
 .tab-content {
   display: none;

@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
   <!-- Estilos Customizados -->
-  <link rel="stylesheet" href="src/css/styles.css?v=1.4.1">
+  <link rel="stylesheet" href="src/css/styles.css?v=1.5.0">
   
   <!-- Chart.js para Visualização de Dados -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -137,6 +137,7 @@
             <i data-lucide="trending-up" class="kpi-icon"></i>
           </div>
           <div class="kpi-value" id="kpi-bruto-val">R$ 0,00</div>
+          <div class="kpi-delta neutral" id="kpi-bruto-delta"></div>
           <div class="kpi-trend neutral" id="kpi-bruto-sub">Total de proventos</div>
         </div>
         
@@ -146,6 +147,7 @@
             <i data-lucide="wallet" class="kpi-icon"></i>
           </div>
           <div class="kpi-value" id="kpi-liquido-val">R$ 0,00</div>
+          <div class="kpi-delta neutral" id="kpi-liquido-delta"></div>
           <div class="kpi-trend positive" id="kpi-liquido-sub">Líquido a receber</div>
         </div>
         
@@ -155,6 +157,7 @@
             <i data-lucide="arrow-down-right" class="kpi-icon"></i>
           </div>
           <div class="kpi-value" id="kpi-descontos-val">R$ 0,00</div>
+          <div class="kpi-delta neutral" id="kpi-descontos-delta"></div>
           <div class="kpi-trend negative" id="kpi-descontos-sub">Descontos no período</div>
         </div>
         
@@ -164,6 +167,7 @@
             <i data-lucide="safe" class="kpi-icon"></i>
           </div>
           <div class="kpi-value" id="kpi-fgts-val">R$ 0,00</div>
+          <div class="kpi-delta neutral" id="kpi-fgts-delta"></div>
           <div class="kpi-trend positive" id="kpi-fgts-sub">Fundo de Garantia</div>
         </div>
         
@@ -173,6 +177,7 @@
             <i data-lucide="percent" class="kpi-icon"></i>
           </div>
           <div class="kpi-value" id="kpi-taxa-val">0,0%</div>
+          <div class="kpi-delta neutral" id="kpi-taxa-delta"></div>
           <div class="kpi-trend negative" id="kpi-taxa-sub">IRRF + INSS sobre Bruto</div>
         </div>
       </section>
@@ -584,6 +589,6 @@
   </div>
 
   <!-- Scripts do App (ES Modules) -->
-  <script type="module" src="src/js/main.js?v=1.4.1"></script>
+  <script type="module" src="src/js/main.js?v=1.5.0"></script>
 </body>
 </html>
